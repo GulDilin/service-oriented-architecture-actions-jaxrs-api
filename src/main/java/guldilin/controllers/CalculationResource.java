@@ -2,8 +2,11 @@ package guldilin.controllers;
 
 import guldilin.dto.CoordinatesDTO;
 import guldilin.dto.LengthDTO;
+import guldilin.exceptions.ArgumentFormatException;
+import guldilin.exceptions.ErrorMessage;
 import guldilin.service.CityService;
 import guldilin.service.CoordinatesService;
+import lombok.SneakyThrows;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
@@ -29,12 +32,24 @@ public class CalculationResource {
     @GET
     @Path("/length/{id1}/{id2}")
     @Produces(MediaType.APPLICATION_JSON)
+    @SneakyThrows
     public LengthDTO calculateDistanceBetweenCities(
-            @PathParam("id1") Long id1,
-            @PathParam("id2") Long id2
+            @PathParam("id1") String id1,
+            @PathParam("id2") String id2
     ) {
-        CoordinatesDTO c1 = this.coordinatesService.getById(this.cityService.getById(id1).getCoordinates());
-        CoordinatesDTO c2 = this.coordinatesService.getById(this.cityService.getById(id2).getCoordinates());
+        long lid1, lid2;
+        try {
+            lid1 = Long.parseLong(id1);
+        } catch (NumberFormatException e) {
+            throw new ArgumentFormatException("id1", ErrorMessage.IS_INTEGER);
+        }
+        try {
+            lid2 = Long.parseLong(id2);
+        } catch (NumberFormatException e) {
+            throw new ArgumentFormatException("id2", ErrorMessage.IS_INTEGER);
+        }
+        CoordinatesDTO c1 = this.coordinatesService.getById(this.cityService.getById(lid1).getCoordinates());
+        CoordinatesDTO c2 = this.coordinatesService.getById(this.cityService.getById(lid2).getCoordinates());
         return new LengthDTO(this.coordinatesService.getDistanceBetween(c1, c2));
     }
 
