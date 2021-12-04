@@ -1,7 +1,7 @@
 package guldilin;
 
-
 import guldilin.controllers.CalculationResource;
+import guldilin.filters.CorsFilter;
 import guldilin.handler.ArgumentFormatExceptionMapper;
 import guldilin.handler.EntryNotFoundMapper;
 import guldilin.handler.NullPointerMapper;
@@ -23,6 +23,7 @@ public class RestApplication extends Application {
         singletons.add(new StorageServiceRequestErrorMapper());
         singletons.add(new EntryNotFoundMapper());
         singletons.add(new ArgumentFormatExceptionMapper());
+        singletons.add(new CorsFilter());
     }
 
     @Override
