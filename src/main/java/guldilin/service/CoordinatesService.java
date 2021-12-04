@@ -22,18 +22,14 @@ public class CoordinatesService {
 
     @SneakyThrows
     public CoordinatesDTO getById(Long id) {
-        System.out.println("GET " + storageServiceUrl + "/api/coordinates/" + id);
         Response response = client.target(storageServiceUrl + "/api/coordinates/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
-        System.out.println("Response status = " + response.getStatus());
         if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
             throw new EntryNotFound(id, ErrorMessage.COORDINATES_NOT_FOUND);
         }
         if (response.getStatus() > 300) throw new StorageServiceRequestException();
-        CoordinatesDTO dto = response.readEntity(CoordinatesDTO.class);
-        System.out.println("READ city dto " + dto);
-        return dto;
+        return response.readEntity(CoordinatesDTO.class);
     }
 
     public Double getDistanceBetween(CoordinatesDTO from, CoordinatesDTO to) {

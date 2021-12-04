@@ -24,18 +24,14 @@ public class CityService {
 
     @SneakyThrows
     public CityDTO getById(Long id) {
-        System.out.println("GET " + storageServiceUrl + "/api/city/" + id);
         Response response = client.target(storageServiceUrl + "/api/city/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
-        System.out.println("Response status = " + response.getStatus());
         if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()){
             throw new EntryNotFound(id, ErrorMessage.CITY_NOT_FOUND);
         }
         if (response.getStatus() > 300) throw new StorageServiceRequestException();
-        CityDTO dto = response.readEntity(CityDTO.class);
-        System.out.println("READ city dto " + dto);
-        return dto;
+        return response.readEntity(CityDTO.class);
     }
 
     public CityDTO getCityWithMaxPopulation() {
