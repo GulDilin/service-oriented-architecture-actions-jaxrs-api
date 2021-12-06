@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class CityService {
     private final Client client;
@@ -34,12 +35,14 @@ public class CityService {
         return response.readEntity(CityDTO.class);
     }
 
+    @SneakyThrows
     public CityDTO getCityWithMaxPopulation() {
-        return client.target(storageServiceUrl + "/api/city?sorting=-population&limit=1")
+        List<CityDTO> cityDTOList = client.target(storageServiceUrl + "/api/city?sorting=-population&limit=1")
                 .request(MediaType.APPLICATION_JSON)
                 .get()
                 .readEntity(CityListDTO.class)
-                .getResults()
-                .get(0);
+                .getResults();
+        if (cityDTOList.size() == 0) throw new EntryNotFound(ErrorMessage.CITY_NOT_FOUND);
+        return cityDTOList.get(0);
     }
 }
