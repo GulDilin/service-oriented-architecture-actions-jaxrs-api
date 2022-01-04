@@ -19,13 +19,6 @@
 3. build war file with `mvn clean install`
 4. Open payara admin console (Usually `localhsot:4848`)
 5. Choose applications. Click deploy and choose your war file
-6. Go to `Configuration` section in sidebar
-7. Choose `server-config`
-8. Choose `JVM Settings`
-9. Choose `JVM Options` tab
-10. Add options to env variables with prefix `-D`. For example to set `KEYSTORE_PATH=/path/to` you need to add
-parameter with value `-DKEYSTORE_PATH=/path/to`
-11. Restart payara (you can do it with a command `asadmin restart-domain`)
 
 #### Setup Payara SSL
 4. Open payara admin console (Usually `localhsot:4848`)
