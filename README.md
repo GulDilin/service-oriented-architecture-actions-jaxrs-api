@@ -30,10 +30,11 @@
 12. Copy your keystore file to `/path/to/payara/config/` 
 13. Enter keystore alias to `Certificate NickName:`
 14. Enter keystore filename to `Key Store:`
-14. Enter `PKIX` to `Trust Algorithm:`
-14. Enter truststore filename (for example same as keystore filename) to `Trust Store:`
-15. `asadmin restart-domain`
-16. If your master password is different with keystore pass (default master pass is `changeit`), you need to change master password
+15. Enter `PKIX` to `Trust Algorithm:`
+16. Enter truststore filename (for example same as keystore filename) to `Trust Store:`
+17. `asadmin create-system-properties KEYSTORE_PATH=<keystore_filename>` (to run my app)
+18. `asadmin restart-domain`
+19. If your master password is different with keystore pass (default master pass is `changeit`), you need to change master password
     1. Run `asadmin stop-domain`
     2. Run `asadmin change-master-password`
     2. Run `asadmin start-domain`
