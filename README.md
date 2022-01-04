@@ -32,13 +32,17 @@ parameter with value `-DKEYSTORE_PATH=/path/to`
 5. Choose applications. Click deploy and choose your war file
 6. Go to `Configuration` section in sidebar
 7. Choose `server-config`
-8. Choose `Admin Service`
-9. Choose `SSL` tab
-10. Copy your keystore file to `/path/to/payara/config/` 
-11. Enter keystore alias to `Certificate NickName:`
-12. Enter keystore filename to `Key Store:`
-13. `asadmin restart-domain`
-14. If your master password is different with keystore pass (default master pass is `changeit`), you need to change master password
+8. Choose `Network Config`
+9. Choose `Network Listeners`
+10. Choose `http-listener-2`
+11. Choose `SSL` tab
+12. Copy your keystore file to `/path/to/payara/config/` 
+13. Enter keystore alias to `Certificate NickName:`
+14. Enter keystore filename to `Key Store:`
+14. Enter `PKIX` to `Trust Algorithm:`
+14. Enter truststore filename (for example same as keystore filename) to `Trust Store:`
+15. `asadmin restart-domain`
+16. If your master password is different with keystore pass (default master pass is `changeit`), you need to change master password
     1. Run `asadmin stop-domain`
     2. Run `asadmin change-master-password`
     2. Run `asadmin start-domain`
