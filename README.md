@@ -21,8 +21,6 @@
 5. Choose applications. Click deploy and choose your war file
 
 #### Setup Payara SSL
-4. Open payara admin console (Usually `localhsot:4848`)
-5. Choose applications. Click deploy and choose your war file
 6. Go to `Configuration` section in sidebar
 7. Choose `server-config`
 8. Choose `Network Config`
