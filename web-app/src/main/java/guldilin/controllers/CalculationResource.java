@@ -8,25 +8,28 @@ import guldilin.service.CityService;
 import guldilin.service.CoordinatesService;
 import lombok.SneakyThrows;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.naming.Context;
+import javax.rmi.PortableRemoteObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 @Path("/calculate")
 public class CalculationResource {
     private final CoordinatesService coordinatesService;
     private final CityService cityService;
 
+    @SneakyThrows
     public CalculationResource() {
-        this.cityService = new CityService();
-        this.coordinatesService = new CoordinatesService();
+        Context context = new ContextProvider().getContext();
+//        Object refCityService = context.lookup("pool/CityServiceImpl!guldilin.service.CityService");
+//        Object refCoordinatesService = context.lookup("pool/CoordinatesServiceImpl!guldilin.service.CoordinatesService");
+        Object refCityService = context.lookup("java:global/soa-ejb/CityServiceImpl!" + CityService.class.getName());
+        Object refCoordinatesService = context.lookup("java:global/soa-ejb/CoordinatesServiceImpl!" + CoordinatesService.class.getName());
+        this.cityService = (CityService) PortableRemoteObject.narrow(refCityService, CityService.class);
+        this.coordinatesService = (CoordinatesService) PortableRemoteObject.narrow(refCoordinatesService, CoordinatesService.class);
     }
 
     @GET

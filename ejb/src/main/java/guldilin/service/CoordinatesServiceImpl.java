@@ -5,24 +5,28 @@ import guldilin.exceptions.EntryNotFound;
 import guldilin.exceptions.ErrorMessage;
 import guldilin.exceptions.StorageServiceRequestException;
 import guldilin.util.ClientFactoryBuilder;
+import guldilin.util.ServiceDiscoveryClientFactory;
 import lombok.SneakyThrows;
 
+import javax.ejb.Remote;
+import javax.ejb.Stateless;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class CoordinatesService {
+@Stateless
+@Remote(CoordinatesService.class)
+public class CoordinatesServiceImpl implements CoordinatesService {
     private final Client client;
-    private final String storageServiceUrl;
 
-    public CoordinatesService() {
+    public CoordinatesServiceImpl() {
         this.client = ClientFactoryBuilder.getClient();
-        this.storageServiceUrl = ClientFactoryBuilder.getStorageServiceUrl();
     }
 
     @SneakyThrows
+    @Override
     public CoordinatesDTO getById(Long id) {
-        Response response = client.target(storageServiceUrl + "/api/coordinates/" + id)
+        Response response = client.target(ServiceDiscoveryClientFactory.getStorageApiUrl() + "/api/coordinates/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
@@ -32,6 +36,7 @@ public class CoordinatesService {
         return response.readEntity(CoordinatesDTO.class);
     }
 
+    @Override
     public Double getDistanceBetween(CoordinatesDTO from, CoordinatesDTO to) {
         return Math.sqrt(Math.pow(from.getX() - to.getX(), 2) + Math.pow(from.getY() - to.getY(), 2));
     }
