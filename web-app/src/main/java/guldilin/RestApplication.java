@@ -2,10 +2,7 @@ package guldilin;
 
 import guldilin.controllers.CalculationResource;
 import guldilin.filters.CorsFilter;
-import guldilin.handler.ArgumentFormatExceptionMapper;
-import guldilin.handler.EntryNotFoundMapper;
-import guldilin.handler.NullPointerMapper;
-import guldilin.handler.StorageServiceRequestErrorMapper;
+import guldilin.handler.*;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -20,9 +17,9 @@ public class RestApplication extends Application {
     public RestApplication() {
         singletons.add(new CalculationResource());
         singletons.add(new NullPointerMapper());
-        singletons.add(new StorageServiceRequestErrorMapper());
-        singletons.add(new EntryNotFoundMapper());
         singletons.add(new ArgumentFormatExceptionMapper());
+        singletons.add(new RemoteExceptionMapper());
+        singletons.add(new EntryNotFoundMapper());
         singletons.add(new CorsFilter());
     }
 

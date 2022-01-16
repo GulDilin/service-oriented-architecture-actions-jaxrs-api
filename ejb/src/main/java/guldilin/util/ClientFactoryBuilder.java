@@ -5,9 +5,10 @@ import lombok.SneakyThrows;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.security.KeyStore;
 
-public class ClientFactoryBuilder {
+public class ClientFactoryBuilder implements Serializable {
     private static Client client;
 
     @SneakyThrows

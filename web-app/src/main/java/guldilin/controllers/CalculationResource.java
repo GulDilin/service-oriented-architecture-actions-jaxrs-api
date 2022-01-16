@@ -26,8 +26,9 @@ public class CalculationResource {
         Context context = new ContextProvider().getContext();
 //        Object refCityService = context.lookup("pool/CityServiceImpl!guldilin.service.CityService");
 //        Object refCoordinatesService = context.lookup("pool/CoordinatesServiceImpl!guldilin.service.CoordinatesService");
-        Object refCityService = context.lookup("java:global/soa-ejb/CityServiceImpl!" + CityService.class.getName());
-        Object refCoordinatesService = context.lookup("java:global/soa-ejb/CoordinatesServiceImpl!" + CoordinatesService.class.getName());
+        String moduleName = "service-oriented-architecture-actions-jaxrs-api-ejb";
+        Object refCityService = context.lookup("java:global/" + moduleName + "/CityServiceImpl!" + CityService.class.getName());
+        Object refCoordinatesService = context.lookup("java:global/" + moduleName + "/CoordinatesServiceImpl!" + CoordinatesService.class.getName());
         this.cityService = (CityService) PortableRemoteObject.narrow(refCityService, CityService.class);
         this.coordinatesService = (CoordinatesService) PortableRemoteObject.narrow(refCoordinatesService, CoordinatesService.class);
     }
@@ -59,6 +60,7 @@ public class CalculationResource {
     @GET
     @Path("/to-max-populated")
     @Produces(MediaType.APPLICATION_JSON)
+    @SneakyThrows
     public LengthDTO calculateDistanceToMaxPopulated() {
         CoordinatesDTO c = this.coordinatesService.getById(this.cityService.getCityWithMaxPopulation().getCoordinates());
         return new LengthDTO(this.coordinatesService.getDistanceBetween(c,

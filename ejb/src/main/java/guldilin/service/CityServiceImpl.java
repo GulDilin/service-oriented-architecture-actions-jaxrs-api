@@ -7,7 +7,6 @@ import guldilin.exceptions.ErrorMessage;
 import guldilin.exceptions.StorageServiceRequestException;
 import guldilin.util.ClientFactoryBuilder;
 import guldilin.util.ServiceDiscoveryClientFactory;
-import lombok.SneakyThrows;
 
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -20,15 +19,16 @@ import java.util.List;
 @Remote(CityService.class)
 public class CityServiceImpl implements CityService {
     private final Client client;
+    private final String storageApiUrl;
 
     public CityServiceImpl() {
         this.client = ClientFactoryBuilder.getClient();
+        this.storageApiUrl = ServiceDiscoveryClientFactory.getStorageApiUrl();
     }
 
-    @SneakyThrows
     @Override
-    public CityDTO getById(Long id) {
-        Response response = client.target(ServiceDiscoveryClientFactory.getStorageApiUrl() + "/api/city/" + id)
+    public CityDTO getById(Long id) throws EntryNotFound, StorageServiceRequestException  {
+        Response response = client.target(storageApiUrl + "/api/city/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
@@ -38,10 +38,9 @@ public class CityServiceImpl implements CityService {
         return response.readEntity(CityDTO.class);
     }
 
-    @SneakyThrows
     @Override
-    public CityDTO getCityWithMaxPopulation() {
-        List<CityDTO> cityDTOList = client.target(ServiceDiscoveryClientFactory.getStorageApiUrl() + "/api/city?sorting=-population&limit=1")
+    public CityDTO getCityWithMaxPopulation() throws EntryNotFound {
+        List<CityDTO> cityDTOList = client.target(storageApiUrl + "/api/city?sorting=-population&limit=1")
                 .request(MediaType.APPLICATION_JSON)
                 .get()
                 .readEntity(CityListDTO.class)

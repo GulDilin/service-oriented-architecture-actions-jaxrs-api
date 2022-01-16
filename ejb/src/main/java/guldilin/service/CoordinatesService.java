@@ -1,9 +1,14 @@
 package guldilin.service;
 
 import guldilin.dto.CoordinatesDTO;
+import guldilin.exceptions.ArgumentFormatException;
+import guldilin.exceptions.EntryNotFound;
+import guldilin.exceptions.StorageServiceRequestException;
 
-public interface CoordinatesService {
-    CoordinatesDTO getById(Long id);
+import java.io.Serializable;
 
-    Double getDistanceBetween(CoordinatesDTO from, CoordinatesDTO to);
+public interface CoordinatesService extends Serializable {
+    CoordinatesDTO getById(Long id) throws EntryNotFound, ArgumentFormatException, NullPointerException, StorageServiceRequestException;
+
+    Double getDistanceBetween(CoordinatesDTO from, CoordinatesDTO to) throws EntryNotFound, ArgumentFormatException, NullPointerException, StorageServiceRequestException;
 }

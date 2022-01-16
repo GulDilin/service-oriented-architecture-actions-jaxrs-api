@@ -10,6 +10,7 @@
     <modules>
         <module>ejb</module>
         <module>web-app</module>
+        <module>ejb-ear</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -83,6 +84,13 @@
             <version>3.6.3.Final</version>
             <scope>provided</scope>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>guldilin</groupId>-->
+<!--            <artifactId>service-oriented-architecture-actions-jaxrs-api-ejb</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--            <type>ejb</type>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -129,6 +137,32 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-ear-plugin</artifactId>-->
+<!--                <version>3.1.0</version>-->
+<!--                <configuration>-->
+<!--                    <ejbVersion>3.2</ejbVersion>-->
+<!--                    <generateApplicationXml>true</generateApplicationXml>-->
+<!--                    <generateClient>true</generateClient>-->
+<!--                    <skinnyWars>true</skinnyWars>-->
+<!--                    <defaultJavaBundleDir>lib/</defaultJavaBundleDir>-->
+<!--                    <defaultLibBundleDir>lib</defaultLibBundleDir>-->
+<!--                    <filtering>true</filtering>-->
+<!--                    <archive>-->
+<!--                        <manifest>-->
+<!--                            <addClasspath>true</addClasspath>-->
+<!--                        </manifest>-->
+<!--                    </archive>-->
+<!--                    <modules>-->
+<!--                        <ejbModule>-->
+<!--                            <groupId>guldilin</groupId>-->
+<!--                            <artifactId>service-oriented-architecture-actions-jaxrs-api-ejb</artifactId>-->
+<!--                            <bundleDir>/lib</bundleDir>-->
+<!--                        </ejbModule>-->
+<!--                    </modules>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

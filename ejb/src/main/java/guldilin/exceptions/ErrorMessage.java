@@ -1,6 +1,8 @@
 package guldilin.exceptions;
 
-public class ErrorMessage {
+import java.io.Serializable;
+
+public class ErrorMessage implements Serializable {
     public static final String IS_INTEGER = "Need to be integer";
     public static final String NOT_FOUND = "Entry not found";
     public static final String CITY_NOT_FOUND = "City not found";

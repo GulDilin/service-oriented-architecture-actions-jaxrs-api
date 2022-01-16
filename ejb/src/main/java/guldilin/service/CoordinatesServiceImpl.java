@@ -18,15 +18,17 @@ import javax.ws.rs.core.Response;
 @Remote(CoordinatesService.class)
 public class CoordinatesServiceImpl implements CoordinatesService {
     private final Client client;
+    private final String storageApiUrl;
+
 
     public CoordinatesServiceImpl() {
         this.client = ClientFactoryBuilder.getClient();
+        this.storageApiUrl = ServiceDiscoveryClientFactory.getStorageApiUrl();
     }
 
-    @SneakyThrows
     @Override
-    public CoordinatesDTO getById(Long id) {
-        Response response = client.target(ServiceDiscoveryClientFactory.getStorageApiUrl() + "/api/coordinates/" + id)
+    public CoordinatesDTO getById(Long id) throws EntryNotFound, StorageServiceRequestException {
+        Response response = client.target(storageApiUrl + "/api/coordinates/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
