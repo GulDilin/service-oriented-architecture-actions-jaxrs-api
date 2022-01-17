@@ -25,8 +25,6 @@ public class CalculationResource {
     @SneakyThrows
     public CalculationResource() {
         Context context = new ContextProvider().getContext();
-//        Object refCityService = context.lookup("pool/CityServiceImpl!guldilin.service.CityService");
-//        Object refCoordinatesService = context.lookup("pool/CoordinatesServiceImpl!guldilin.service.CoordinatesService");
         String moduleName = "service-oriented-architecture-actions-jaxrs-api-ejb";
         Object refCityService = context.lookup("java:global/" + moduleName + "/CityServiceImpl!" + CityService.class.getName());
         Object refCoordinatesService = context.lookup("java:global/" + moduleName + "/CoordinatesServiceImpl!" + CoordinatesService.class.getName());

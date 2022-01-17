@@ -1,6 +1,7 @@
 package guldilin;
 
 import guldilin.controllers.CalculationResource;
+import guldilin.controllers.HealthResource;
 import guldilin.filters.CorsFilter;
 import guldilin.handler.*;
 
@@ -16,6 +17,7 @@ public class RestApplication extends Application {
 
     public RestApplication() {
         singletons.add(new CalculationResource());
+        singletons.add(new HealthResource());
         singletons.add(new NullPointerMapper());
         singletons.add(new ArgumentFormatExceptionMapper());
         singletons.add(new RemoteExceptionMapper());
