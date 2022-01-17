@@ -20,6 +20,7 @@ public class RestApplication extends Application {
         singletons.add(new ArgumentFormatExceptionMapper());
         singletons.add(new RemoteExceptionMapper());
         singletons.add(new EntryNotFoundMapper());
+        singletons.add(new NamingExceptionMapper());
         singletons.add(new CorsFilter());
     }
 

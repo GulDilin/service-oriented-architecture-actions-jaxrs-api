@@ -6,6 +6,7 @@ import guldilin.exceptions.ArgumentFormatException;
 import guldilin.exceptions.ErrorMessage;
 import guldilin.service.CityService;
 import guldilin.service.CoordinatesService;
+import guldilin.util.ExceptionUtils;
 import lombok.SneakyThrows;
 
 import javax.naming.Context;
@@ -52,9 +53,15 @@ public class CalculationResource {
         } catch (NumberFormatException e) {
             throw new ArgumentFormatException("id2", ErrorMessage.IS_INTEGER);
         }
-        CoordinatesDTO c1 = this.coordinatesService.getById(this.cityService.getById(lid1).getCoordinates());
-        CoordinatesDTO c2 = this.coordinatesService.getById(this.cityService.getById(lid2).getCoordinates());
-        return new LengthDTO(this.coordinatesService.getDistanceBetween(c1, c2));
+        try {
+            CoordinatesDTO c1 = this.coordinatesService.getById(this.cityService.getById(lid1).getCoordinates());
+            CoordinatesDTO c2 = this.coordinatesService.getById(this.cityService.getById(lid2).getCoordinates());
+            return new LengthDTO(this.coordinatesService.getDistanceBetween(c1, c2));
+        } catch (Exception e) {
+            System.out.println("CAAAAATCH AN EXCEEEPTION: " + e.getClass().getName());
+            System.out.println("CAAAAAUSE: " + e.getCause().getClass().getName() + " MESSAGE: " + e.getCause().getMessage());
+            throw ExceptionUtils.deserializeRemoteException(e);
+        }
     }
 
     @GET
@@ -62,8 +69,12 @@ public class CalculationResource {
     @Produces(MediaType.APPLICATION_JSON)
     @SneakyThrows
     public LengthDTO calculateDistanceToMaxPopulated() {
-        CoordinatesDTO c = this.coordinatesService.getById(this.cityService.getCityWithMaxPopulation().getCoordinates());
-        return new LengthDTO(this.coordinatesService.getDistanceBetween(c,
-                CoordinatesDTO.builder().x(0L).y(0).build()));
+        try {
+            CoordinatesDTO c = this.coordinatesService.getById(this.cityService.getCityWithMaxPopulation().getCoordinates());
+            return new LengthDTO(this.coordinatesService.getDistanceBetween(c,
+                    CoordinatesDTO.builder().x(0L).y(0).build()));
+        } catch (Exception e) {
+            throw ExceptionUtils.deserializeRemoteException(e);
+        }
     }
 }

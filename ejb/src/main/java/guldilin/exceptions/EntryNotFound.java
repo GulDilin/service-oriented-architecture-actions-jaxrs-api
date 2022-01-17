@@ -3,8 +3,6 @@ package guldilin.exceptions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class EntryNotFound extends Exception {
@@ -26,5 +24,10 @@ public class EntryNotFound extends Exception {
     public EntryNotFound(Long id, String m) {
         super(m);
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "EntryNotFound;" + id + ";" + getMessage();
     }
 }

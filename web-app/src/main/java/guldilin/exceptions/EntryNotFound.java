@@ -25,4 +25,9 @@ public class EntryNotFound extends Exception {
         super(m);
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "EntryNotFound;" + id + ";" + getMessage();
+    }
 }

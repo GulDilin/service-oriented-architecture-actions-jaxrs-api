@@ -10,4 +10,9 @@ public class ArgumentFormatException extends Exception {
         super(message);
         this.argument = argument;
     }
+
+    @Override
+    public String toString() {
+        return "EntryNotFound;" + argument + ";" + getMessage();
+    }
 }

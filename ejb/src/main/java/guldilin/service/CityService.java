@@ -8,6 +8,6 @@ import guldilin.exceptions.StorageServiceRequestException;
 import java.io.Serializable;
 
 public interface CityService extends Serializable {
-    CityDTO getById(Long id) throws EntryNotFound, ArgumentFormatException, NullPointerException, StorageServiceRequestException;
-    CityDTO getCityWithMaxPopulation() throws EntryNotFound, ArgumentFormatException, NullPointerException, StorageServiceRequestException;
+    CityDTO getById(Long id) throws Exception;
+    CityDTO getCityWithMaxPopulation() throws Exception;
 }
