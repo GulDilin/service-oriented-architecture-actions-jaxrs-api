@@ -24,6 +24,7 @@ public class RestApplication extends Application {
         singletons.add(new EntryNotFoundMapper());
         singletons.add(new NamingExceptionMapper());
         singletons.add(new CorsFilter());
+        singletons.add(new StorageServiceRequestExceptionMapper());
     }
 
     @Override
