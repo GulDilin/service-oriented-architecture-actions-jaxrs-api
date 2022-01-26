@@ -17,12 +17,12 @@ public class EntryNotFound extends Exception {
     }
 
     public EntryNotFound(Long id) {
-        super(ErrorMessage.NOT_FOUND);
+        super(ErrorMessage.NOT_FOUND + " with id " + id);
         this.id = id;
     }
 
     public EntryNotFound(Long id, String m) {
-        super(m);
+        super(m + " with id " + id);
         this.id = id;
     }
 

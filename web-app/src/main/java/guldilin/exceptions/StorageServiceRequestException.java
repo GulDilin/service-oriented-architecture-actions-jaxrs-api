@@ -1,5 +1,8 @@
 package guldilin.exceptions;
 
+import javax.xml.ws.WebFault;
+
+@WebFault(name = "storageServiceRequestFailed")
 public class StorageServiceRequestException extends Exception {
     public StorageServiceRequestException(String message) {
         super(message);

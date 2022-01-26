@@ -5,7 +5,6 @@ import guldilin.exceptions.EntryNotFound;
 import guldilin.exceptions.ErrorMessage;
 import guldilin.exceptions.StorageServiceRequestException;
 import guldilin.util.ClientFactoryBuilder;
-import guldilin.util.ExceptionsUtils;
 import guldilin.util.ServiceDiscoveryClientFactory;
 
 import javax.ejb.Remote;
@@ -27,15 +26,14 @@ public class CoordinatesServiceImpl implements CoordinatesService {
     }
 
     @Override
-    public CoordinatesDTO getById(Long id) throws Exception {
+    public CoordinatesDTO getById(Long id) throws EntryNotFound, StorageServiceRequestException {
         Response response = client.target(storageApiUrl + "/api/coordinates/" + id)
                 .request(MediaType.APPLICATION_JSON)
                 .get();
         if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
-            throw ExceptionsUtils.serializeRemoteException(new EntryNotFound(id, ErrorMessage.COORDINATES_NOT_FOUND));
+            throw new EntryNotFound(id, ErrorMessage.COORDINATES_NOT_FOUND);
         }
-        if (response.getStatus() > 300) throw ExceptionsUtils.serializeRemoteException(
-                new StorageServiceRequestException());
+        if (response.getStatus() > 300) throw new StorageServiceRequestException();
         return response.readEntity(CoordinatesDTO.class);
     }
 
