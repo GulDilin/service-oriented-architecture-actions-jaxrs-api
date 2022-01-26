@@ -3,8 +3,11 @@ package guldilin.exceptions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.xml.ws.WebFault;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
+@WebFault(name = "entryNotFound")
 public class EntryNotFound extends Exception {
     private Long id;
 

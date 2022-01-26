@@ -1,23 +1,29 @@
 package guldilin.controllers;
 
+import guldilin.dto.CalculationBetweenCitiesArgumentDTO;
 import guldilin.dto.CoordinatesDTO;
 import guldilin.dto.LengthDTO;
 import guldilin.exceptions.ArgumentFormatException;
-import guldilin.exceptions.ErrorMessage;
+import guldilin.exceptions.EntryNotFound;
+import guldilin.exceptions.StorageServiceRequestException;
 import guldilin.service.CityService;
 import guldilin.service.CoordinatesService;
-import guldilin.util.ExceptionUtils;
+import guldilin.util.Utils;
 import lombok.SneakyThrows;
 
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
 import javax.naming.Context;
 import javax.rmi.PortableRemoteObject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
-@Path("/calculate")
+import static guldilin.util.Utils.ACTIONS_API_CALCULATION_RESOURCE;
+
+
+@WebService(
+        name = "CalculationResource",
+        targetNamespace = ACTIONS_API_CALCULATION_RESOURCE
+)
 public class CalculationResource {
     private final CoordinatesService coordinatesService;
     private final CityService cityService;
@@ -25,54 +31,26 @@ public class CalculationResource {
     @SneakyThrows
     public CalculationResource() {
         Context context = new ContextProvider().getContext();
-        String moduleName = "service-oriented-architecture-actions-jaxrs-api-ejb";
-        Object refCityService = context.lookup("java:global/" + moduleName + "/CityServiceImpl!" + CityService.class.getName());
-        Object refCoordinatesService = context.lookup("java:global/" + moduleName + "/CoordinatesServiceImpl!" + CoordinatesService.class.getName());
+        String moduleName = Utils.getEnvOrPropElseDefault("CONTEXT_MODULE_NAME_EJB",
+                "service-oriented-architecture-actions-jaxrs-api-ejb");
+        Object refCityService = context.lookup("ejb:/" + moduleName + "/CityServiceImpl!" + CityService.class.getName());
+        Object refCoordinatesService = context.lookup("ejb:/" + moduleName + "/CoordinatesServiceImpl!" + CoordinatesService.class.getName());
         this.cityService = (CityService) PortableRemoteObject.narrow(refCityService, CityService.class);
         this.coordinatesService = (CoordinatesService) PortableRemoteObject.narrow(refCoordinatesService, CoordinatesService.class);
     }
 
-    @GET
-    @Path("/length/{id1}/{id2}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @SneakyThrows
-    public LengthDTO calculateDistanceBetweenCities(
-            @PathParam("id1") String id1,
-            @PathParam("id2") String id2
-    ) {
-        long lid1, lid2;
-        try {
-            lid1 = Long.parseLong(id1);
-        } catch (NumberFormatException e) {
-            throw new ArgumentFormatException("id1", ErrorMessage.IS_INTEGER);
-        }
-        try {
-            lid2 = Long.parseLong(id2);
-        } catch (NumberFormatException e) {
-            throw new ArgumentFormatException("id2", ErrorMessage.IS_INTEGER);
-        }
-        try {
-            CoordinatesDTO c1 = this.coordinatesService.getById(this.cityService.getById(lid1).getCoordinates());
-            CoordinatesDTO c2 = this.coordinatesService.getById(this.cityService.getById(lid2).getCoordinates());
-            return new LengthDTO(this.coordinatesService.getDistanceBetween(c1, c2));
-        } catch (Exception e) {
-            System.out.println("CAAAAATCH AN EXCEEEPTION: " + e.getClass().getName());
-            System.out.println("CAAAAAUSE: " + e.getCause().getClass().getName() + " MESSAGE: " + e.getCause().getMessage());
-            throw ExceptionUtils.deserializeRemoteException(e);
-        }
+    @WebMethod
+    public LengthDTO calculateDistanceBetweenCities(@WebParam(name = "arg0") CalculationBetweenCitiesArgumentDTO argument)
+            throws ArgumentFormatException, StorageServiceRequestException, EntryNotFound {
+        CoordinatesDTO c1 = this.coordinatesService.getById(this.cityService.getById(argument.getId1()).getCoordinates());
+        CoordinatesDTO c2 = this.coordinatesService.getById(this.cityService.getById(argument.getId2()).getCoordinates());
+        return new LengthDTO(this.coordinatesService.getDistanceBetween(c1, c2));
     }
 
-    @GET
-    @Path("/to-max-populated")
-    @Produces(MediaType.APPLICATION_JSON)
-    @SneakyThrows
-    public LengthDTO calculateDistanceToMaxPopulated() {
-        try {
-            CoordinatesDTO c = this.coordinatesService.getById(this.cityService.getCityWithMaxPopulation().getCoordinates());
-            return new LengthDTO(this.coordinatesService.getDistanceBetween(c,
-                    CoordinatesDTO.builder().x(0L).y(0).build()));
-        } catch (Exception e) {
-            throw ExceptionUtils.deserializeRemoteException(e);
-        }
+    @WebMethod
+    public LengthDTO calculateDistanceToMaxPopulated()
+            throws StorageServiceRequestException, EntryNotFound, ArgumentFormatException {
+        CoordinatesDTO c = this.coordinatesService.getById(this.cityService.getCityWithMaxPopulation().getCoordinates());
+        return new LengthDTO(this.coordinatesService.getDistanceBetween(c, CoordinatesDTO.builder().x(0L).y(0).build()));
     }
 }
